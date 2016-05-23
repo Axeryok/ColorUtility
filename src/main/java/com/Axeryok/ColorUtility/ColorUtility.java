@@ -1,5 +1,6 @@
 package com.Axeryok.ColorUtility;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import com.google.common.eventbus.Subscribe;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.DummyModContainer;
@@ -27,7 +29,7 @@ public class ColorUtility extends DummyModContainer {
 		meta.name="ColorUtility";
 		meta.modId="ColorUtility";
 		meta.description="Make handling color code more easily.";
-		meta.version="1.0.0";
+		meta.version="1.0.1";
 		meta.authorList=Arrays.asList("Axer");
 		meta.credits="";
 		this.setEnabledState(true);
@@ -38,19 +40,23 @@ public class ColorUtility extends DummyModContainer {
 		return obj;
 	}
 	
-	public static void editButtonList(GuiScreen obj,List<GuiButton> list){
-		System.out.println(list);
+	public static void editButtonList(GuiScreen obj,List<GuiButton> list) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException{
+		if(obj instanceof GuiScreenBook){//編集状態でない本の判定
+			Field f=obj.getClass().getDeclaredField("field_146475_i");
+			f.setAccessible(true);
+			if(!f.getBoolean(obj)){
+				return;
+			}
+		}
 		GuiFormatButton.editFormatButtonList(list, 20, obj.width);
 	}
 	
 	public static void performColorCode(GuiScreen obj,GuiButton btn) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		if(btn.id>=20&&btn.id<=42){
-			if(obj instanceof GuiEditSign){
-				Method m=obj.getClass().getDeclaredMethod("func_73869_a", char.class,int.class);
-				m.setAccessible(true);
-				m.invoke(obj,(char)167,(int)167);
-				m.invoke(obj,(char)((GuiFormatButton)btn).charCode, (int)167);
-			}
+			Method m=obj.getClass().getDeclaredMethod("func_73869_a", char.class,int.class);
+			m.setAccessible(true);
+			m.invoke(obj,(char)167,(int)167);
+			m.invoke(obj,(char)((GuiFormatButton)btn).charCode, (int)167);
 		}
 	}
 	

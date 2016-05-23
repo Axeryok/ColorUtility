@@ -10,6 +10,7 @@ import org.objectweb.asm.ClassWriter;
 
 import com.Axeryok.ColorUtility.adapter.ChatAllowedCharactersAdapter;
 import com.Axeryok.ColorUtility.adapter.GuiEditSignAdapter;
+import com.Axeryok.ColorUtility.adapter.GuiScreenBookAdapter;
 import com.Axeryok.ColorUtility.adapter.NetHandlerPlayServerAdapter;
 
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -33,6 +34,11 @@ public class ColorUtilityTransformer implements IClassTransformer {
 			
 			return this.transformGuiEditSign(basicClass);
 		}
+		if (transformedName.equals("net.minecraft.client.gui.GuiScreenBook")){
+			ModLog.log("open GuiScreenBook");
+			
+			return this.transformGuiScreenBook(basicClass);
+		}
 		return basicClass;
 	}
 	
@@ -42,7 +48,6 @@ public class ColorUtilityTransformer implements IClassTransformer {
 		ClassVisitor cv= new NetHandlerPlayServerAdapter(cw);
 		cr.accept(cv, 0);
 		return cw.toByteArray();
-		
 	}
 	
 	private byte[] transformChatAllowedCharacters(byte[] bytes){
@@ -51,7 +56,6 @@ public class ColorUtilityTransformer implements IClassTransformer {
 		ClassVisitor cv= new ChatAllowedCharactersAdapter(cw);
 		cr.accept(cv, 0);
 		return cw.toByteArray();
-		
 	}
 	
 	private byte[] transformGuiEditSign(byte[] bytes){
@@ -60,7 +64,13 @@ public class ColorUtilityTransformer implements IClassTransformer {
 		ClassVisitor cv= new GuiEditSignAdapter(cw);
 		cr.accept(cv, 0);
 		return cw.toByteArray();
-		
+	}
+	private byte[] transformGuiScreenBook(byte[] bytes){
+		ClassReader cr=new ClassReader(bytes);
+		ClassWriter cw =new ClassWriter(1);
+		ClassVisitor cv = new GuiScreenBookAdapter(cw);
+		cr.accept(cv, 0);
+		return cw.toByteArray();
 	}
 	
 }
