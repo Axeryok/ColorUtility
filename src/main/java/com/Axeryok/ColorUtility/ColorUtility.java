@@ -31,7 +31,7 @@ public class ColorUtility extends DummyModContainer {
 		meta.name = "ColorUtility";
 		meta.modId = "ColorUtility";
 		meta.description = "Make handling color code more easily.\nThis mod was built on forge 1.9.4.";
-		meta.version = "1.0.3";
+		meta.version = "1.0.4";
 		meta.authorList = Arrays.asList("Axer");
 		meta.credits = "";
 		meta.url="http://forum.minecraftuser.jp/viewtopic.php?f=13&t=24394";

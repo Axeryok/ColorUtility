@@ -11,7 +11,7 @@ public class GuiEditSignAdapter extends ClassVisitor {
 	String className="net.minecraft.client.gui.inventory.GuiEditSign";
 	static String modifyingMethodName;
 	public GuiEditSignAdapter(ClassVisitor cv) {
-		super(Opcodes.ASM4,cv);
+		super(Opcodes.ASM5,cv);
 	}
 
 	@Override
@@ -19,17 +19,15 @@ public class GuiEditSignAdapter extends ClassVisitor {
 		/* initGui末尾にcom.Axeryok.ColorUtility.editButtonList(this,this.buttonList)を挿入 */
 		if("initGui".equals(name)||"func_73866_w_".equals(DeobfuscationHelper.mapMethodName(className, name, desc))){
 			modifyingMethodName=name;
-			return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)){
+			return new MethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)){
 				@Override
 				public void visitInsn(int opcode){
 					if(opcode==Opcodes.RETURN){
 						ModLog.log("com.Axeryok.ColorUtility.editButtonList method has been added at end of "+modifyingMethodName+".");
-						super.visitVarInsn(Opcodes.ALOAD, 0);
-						super.visitVarInsn(Opcodes.ALOAD, 0);
+						super.visitIntInsn(Opcodes.ALOAD, 0);
+						super.visitIntInsn(Opcodes.ALOAD, 0);
 						super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/client/gui/inventory/GuiEditSign", "field_146292_n", "Ljava/util/List;");
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/Axeryok/ColorUtility/ColorUtility", "editButtonList", "(Lnet/minecraft/client/gui/GuiScreen;Ljava/util/List;)V");
-						super.visitInsn(Opcodes.RETURN);
-						return;
+						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/Axeryok/ColorUtility/ColorUtility", "editButtonList", "(Lnet/minecraft/client/gui/GuiScreen;Ljava/util/List;)V",false);
 					}
 					super.visitInsn(opcode);
 				}
@@ -38,18 +36,16 @@ public class GuiEditSignAdapter extends ClassVisitor {
 		/* actionPerformed末尾にcom.Axeryok.ColorUtility.performColorCode(this,this.button)を挿入 */
 		else if("actionPerformed".equals(name)||"func_146284_a".equals(DeobfuscationHelper.mapMethodName(className, name, desc))){
 			modifyingMethodName=name;
-			return new MethodVisitor(Opcodes.ASM4, super.visitMethod(access, name, desc, signature, exceptions)){
+			return new MethodVisitor(Opcodes.ASM5, super.visitMethod(access, name, desc, signature, exceptions)){
 				@Override
-				public void visitInsn(int opcode){
-					if(opcode==Opcodes.RETURN){
+				public void visitCode(){
+					//if(opcode==Opcodes.RETURN){
 						ModLog.log("com.Axeryok.ColorUtility.performColorCode method has been added at end of "+modifyingMethodName+".");
-						super.visitVarInsn(Opcodes.ALOAD, 0);
-						super.visitVarInsn(Opcodes.ALOAD,1);
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/Axeryok/ColorUtility/ColorUtility", "performColorCode", "(Lnet/minecraft/client/gui/GuiScreen;Lnet/minecraft/client/gui/GuiButton;)V");
-						super.visitInsn(Opcodes.RETURN);
-						return;
-					}
-					super.visitInsn(opcode);
+						super.visitIntInsn(Opcodes.ALOAD, 0);
+						super.visitIntInsn(Opcodes.ALOAD,1);
+						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/Axeryok/ColorUtility/ColorUtility", "performColorCode", "(Lnet/minecraft/client/gui/GuiScreen;Lnet/minecraft/client/gui/GuiButton;)V",false);
+					//}
+					super.visitCode();
 				}
 			};
 		}

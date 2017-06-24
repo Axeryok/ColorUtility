@@ -73,4 +73,13 @@ public class ColorUtilityTransformer implements IClassTransformer {
 		return cw.toByteArray();
 	}
 	
+	private void debugFilePut(byte[] bytes) {
+		try{
+			FileOutputStream output=new FileOutputStream("test.class");
+			output.write(bytes);
+			output.close();
+		}
+		catch(Exception e){}
+	}
+	
 }
